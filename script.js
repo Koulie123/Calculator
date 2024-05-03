@@ -3,6 +3,7 @@
 const allButtons = document.querySelectorAll("button");
 const numberButtons = document.querySelectorAll(".num");
 const currentlyTyped = document.querySelector(".currently-typed");
+const operandButtons = document.querySelectorAll(".operand");
 allButtons.forEach((button) => {
     button.textContent = button.value;
 });
@@ -12,6 +13,11 @@ numberButtons.forEach((button) => {
             currentlyTyped.textContent = button.value;
         } else {
             currentlyTyped.textContent += button.value;
-        }
+        };
     })
+    button.style.backgroundColor = "#ff9999";
+
+})
+operandButtons.forEach((button) => {
+    button.style.backgroundColor = "#ff9900";
 })
