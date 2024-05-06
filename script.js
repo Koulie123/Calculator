@@ -5,7 +5,7 @@ const numberButtons = document.querySelectorAll(".num");
 const runningTotal = document.querySelector(".running-total");
 const currentlyTyped = document.querySelector(".currently-typed");
 const operandButtons = document.querySelectorAll(".operand");
-const currentlyTypedArray = [];
+let currentlyTypedArray = [];
 
 let numberStack = [];
 let numbersToOperate = [];
@@ -130,7 +130,6 @@ function handleMultiply(buttonObject) {
         numberStack = [];
         updateDisplay();
     }
-
 }
 function handleDivide(buttonObject) {
     if (!(typeOfOperation == "/")){
@@ -162,7 +161,21 @@ function handleEquals(buttonObject) {
             divide();
             break;
     }
+    currentlyTypedArray = result.map(element => {
+        let buttonObject = {
+            
+                value: element,
+                isNumber: false,
+                isOperand: false,
+                isEquals: false,
+                isClear: false,
+                operandType: "",
+            }
+            return buttonObject;
+        });
+    console.log("currently typed array" + currentlyTypedArray);
     typeOfOperation = "";
     numbersToOperate = [result];
     numberStack = [];
+    updateDisplay();
 }
