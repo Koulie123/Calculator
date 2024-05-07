@@ -13,6 +13,7 @@ let result = 0;
 let typeOfOperation = "";
 allButtons.forEach((button) => {
     button.textContent = button.value;
+    if(button.id == "negative") button.textContent = "±";
 });
 
 
@@ -47,6 +48,7 @@ const handleButtonClick = function(button) {
     if (buttonObject.isOperand && buttonObject.operandType == "-") handleMinus(buttonObject);
     if (buttonObject.isOperand && buttonObject.operandType == "*") handleMultiply(buttonObject);
     if (buttonObject.isOperand && buttonObject.operandType == "/") handleDivide(buttonObject);
+    if (buttonObject.isNegative) handleNegative(buttonObject);
     
 };
 //Defining the button object online
@@ -58,11 +60,13 @@ function createButtonObject(event) {
         isEquals: false,
         isClear: false,
         operandType: "",
+        isNegative: false,
     }
     if (event.classList.contains("num")) buttonObject.isNumber = true;
     if (event.classList.contains("operand")) buttonObject.isOperand = true;
     if (event.id == "equals") buttonObject.isEquals = true;
     if (event.id == "clear") buttonObject.isClear = true;
+    if (event.id == "negative") buttonObject.isNegative = true;
     if (event.id == "add") buttonObject.operandType = "+";
     if (event.id == "subtract") buttonObject.operandType = "-";
     if (event.id == "multiply") buttonObject.operandType = "*";
@@ -99,7 +103,43 @@ function add() {
 }
 function subtract() {
     result = numbersToOperate[0] - numbersToOperate[1];
-
+    runningTotal.textContent = result;
+    while (numbersToOperate.length > 1) {
+        numbersToOperate.pop();
+    }
+    numbersToOperate[0] = result;
+}
+function multiply() {
+    result = numbersToOperate[0] * numbersToOperate[1];
+    runningTotal.textContent = result;
+    while (numbersToOperate.length > 1) {
+        numbersToOperate.pop();
+    }
+    numbersToOperate[0] = result;
+}
+function divide() {
+    if (numbersToOperate[1] == 0) {
+        clear();
+        currentlyTypedArray = "No dividing by zero!".split('').map(element => {
+            let buttonObject = {
+                
+                    value: element,
+                    isNumber: false,
+                    isOperand: false,
+                    isEquals: false,
+                    isClear: false,
+                    operandType: "",
+                }
+                return buttonObject;
+            });
+        return;
+    }
+    result = numbersToOperate[0] / numbersToOperate[1];
+    runningTotal.textContent = result;
+    while (numbersToOperate.length > 1) {
+        numbersToOperate.pop();
+    }
+    numbersToOperate[0] = result;
 }
 function handlePlus(buttonObject) {
     console.log("handlePlusFunction");
@@ -111,15 +151,23 @@ function handlePlus(buttonObject) {
         currentlyTypedArray.push(buttonObject);
         numberStack = [];
         updateDisplay();
+    } else {
+        handleEquals(buttonObject);
+        typeOfOperation = "";
+        handlePlus(buttonObject);
     }
 }
 function handleMinus(buttonObject) {
-    if (typeOfOperation == "-") {
+    if (!(typeOfOperation == "-")) {
         if (numberStack.length > 0) numbersToOperate.push(Number(numberStack.join("")));
         typeOfOperation = "-";
         currentlyTypedArray.push(buttonObject);
         numberStack = [];
         updateDisplay();
+    } else {
+        handleEquals(buttonObject);
+        typeOfOperation = "";
+        handleMinus(buttonObject);
     }
 }
 function handleMultiply(buttonObject) {
@@ -129,6 +177,10 @@ function handleMultiply(buttonObject) {
         currentlyTypedArray.push(buttonObject);
         numberStack = [];
         updateDisplay();
+    } else {
+        handleEquals(buttonObject);
+        typeOfOperation = "";
+        handleMultiply(buttonObject);
     }
 }
 function handleDivide(buttonObject) {
@@ -138,6 +190,23 @@ function handleDivide(buttonObject) {
         currentlyTypedArray.push(buttonObject);
         numberStack = [];
         updateDisplay();
+    } else {
+        handleEquals(buttonObject);
+        typeOfOperation = "";
+        handleDivide(buttonObject);
+    }
+}
+function handleNegative(buttonObject) {
+    console.log("handleNegativeFunction");
+    if (numberStack[0] != "-") {
+        currentlyTypedArray.splice(currentlyTypedArray.length - numberStack.length, 0, buttonObject);
+        numberStack.unshift("-");
+        console.log("number stack" + numberStack);
+        // currentlyTypedArray.unshift(buttonObject);
+        updateDisplay();
+    }else{
+        numberStack.shift();
+        currentlyTypedArray.splice(currentlyTypedArray.length - numberStack.length, 1);
     }
 }
 
@@ -161,18 +230,22 @@ function handleEquals(buttonObject) {
             divide();
             break;
     }
-    currentlyTypedArray = result.map(element => {
-        let buttonObject = {
-            
-                value: element,
-                isNumber: false,
-                isOperand: false,
-                isEquals: false,
-                isClear: false,
-                operandType: "",
-            }
-            return buttonObject;
-        });
+    if (!(currentlyTypedArray.map(element => element.value).join("") == "No dividing by zero!"))
+        {
+        currentlyTypedArray = result.toString().split('').map(element => {
+            let buttonObject = {
+                
+                    value: element,
+                    isNumber: false,
+                    isOperand: false,
+                    isEquals: false,
+                    isClear: false,
+                    operandType: "",
+                }
+                return buttonObject;
+            });
+    }
+
     console.log("currently typed array" + currentlyTypedArray);
     typeOfOperation = "";
     numbersToOperate = [result];
