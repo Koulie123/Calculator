@@ -12,6 +12,9 @@ button {
     border: 1px solid black;
     font-weight: 800;
 }
+button:hover {
+    opacity: 0.90;
+}
 button.operand {
     background-color: #ff9900;
 }
@@ -51,6 +54,7 @@ button.num {
     display: block;
     box-sizing: border-box;
     border: 2px solid black;
+    font-size: 2em;
 }
 #top-of-calculator {
     justify-content: center;
@@ -72,11 +76,14 @@ button.num {
 .running-total {
     width: 100%;
     height: 65%;
+    font-size: 1em;
 }
 .currently-typed {
     width: 100%;
     height: 25%;
     text-align: right;
+    font-size: .8em;
+
 }
 
 .row {

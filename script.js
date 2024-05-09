@@ -1,4 +1,5 @@
 
+//to fix: dividing multiple times is 0 for some reason.
 //setting up the buttons
 const allButtons = document.querySelectorAll("button");
 const numberButtons = document.querySelectorAll(".num");
@@ -118,6 +119,7 @@ function multiply() {
     numbersToOperate[0] = result;
 }
 function divide() {
+    console.log("numbers to operate" + numbersToOperate[1])
     if (numbersToOperate[1] == 0) {
         clear();
         currentlyTypedArray = "No dividing by zero!".split('').map(element => {
